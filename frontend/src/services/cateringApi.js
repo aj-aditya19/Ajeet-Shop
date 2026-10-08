@@ -1,0 +1,16 @@
+import api, { unwrap } from './api';
+export const getPublicEquipment = () => api.get('/catering/public/equipment').then(unwrap).then((d) => d.items);
+export const getCateringDashboard = () => api.get('/catering/dashboard').then(unwrap);
+export const getEquipment = () => api.get('/catering/equipment').then(unwrap).then((d) => d.items);
+export const createEquipment = (b) => api.post('/catering/equipment', b).then(unwrap);
+export const updateEquipment = (id, b) => api.put(`/catering/equipment/${id}`, b).then(unwrap);
+export const deactivateEquipment = (id) => api.delete(`/catering/equipment/${id}`).then(unwrap);
+export const getRentals = (params) => api.get('/catering/rentals', { params }).then(unwrap);
+export const createRental = (b) => api.post('/catering/rentals', b).then(unwrap);
+export const updateRental = (id, b) => api.put(`/catering/rentals/${id}`, b).then(unwrap);
+export const returnRental = (id) => api.patch(`/catering/rentals/${id}/return`).then(unwrap);
+export const cancelRental = (id) => api.patch(`/catering/rentals/${id}/cancel`).then(unwrap);
+export const getClients = () => api.get('/catering/clients').then(unwrap).then((d) => d.items);
+export const getReports = (params) => api.get('/catering/reports', { params }).then(unwrap);
+export const getAlerts = () => api.get('/catering/alerts').then(unwrap);
+export const sendAlertsNow = () => api.post('/catering/alerts/send').then(unwrap);
