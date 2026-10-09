@@ -1,11 +1,25 @@
-const asyncHandler = require('../utils/asyncHandler');
-const { ok, created } = require('../utils/response');
-const authService = require('../services/authService');
+const asyncHandler = require("../utils/asyncHandler");
+const { ok, created } = require("../utils/response");
+const authService = require("../services/authService");
 
-exports.register = asyncHandler(async (req, res) => created(res, await authService.register(req.body), 'Registration successful'));
-exports.login = asyncHandler(async (req, res) => ok(res, await authService.login(req.body.email, req.body.password), 'Login successful'));
+exports.register = asyncHandler(async (req, res) =>
+  created(res, await authService.register(req.body), "Registration successful"),
+);
+exports.login = asyncHandler(async (req, res) =>
+  ok(
+    res,
+    await authService.login(req.body.email, req.body.password),
+    "Login successful",
+  ),
+);
 exports.adminLogin = asyncHandler(async (req, res) =>
-  ok(res, await authService.login(req.body.email, req.body.password, { adminOnly: true }), 'Admin login successful'));
-// JWTs are stateless: the client discards the token. (Add a token denylist or switch to httpOnly cookies to revoke server-side.)
-exports.logout = (_req, res) => ok(res, {}, 'Logged out');
+  ok(
+    res,
+    await authService.login(req.body.email, req.body.password, {
+      adminOnly: true,
+    }),
+    "Admin login successful",
+  ),
+);
+exports.logout = (_req, res) => ok(res, {}, "Logged out");
 exports.me = (req, res) => ok(res, { user: req.user });

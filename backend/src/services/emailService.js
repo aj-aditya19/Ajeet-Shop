@@ -1,14 +1,16 @@
-// Optional email. Never throws: missing credentials or SMTP failures only log a warning.
-const nodemailer = require('nodemailer');
-const env = require('../config/env');
+const nodemailer = require("nodemailer");
+const env = require("../config/env");
 
 let transporter;
-const configured = () => Boolean(env.email.host && env.email.user && env.email.password);
+const configured = () =>
+  Boolean(env.email.host && env.email.user && env.email.password);
 
 function getTransporter() {
   if (!transporter) {
-    if (String(env.email.host).includes('@'))
-      console.warn('[email] EMAIL_HOST must be an SMTP server like smtp.gmail.com, not an email address.');
+    if (String(env.email.host).includes("@"))
+      console.warn(
+        "[email] EMAIL_HOST must be an SMTP server like smtp.gmail.com, not an email address.",
+      );
     transporter = nodemailer.createTransport({
       host: env.email.host,
       port: env.email.port,
@@ -22,7 +24,12 @@ function getTransporter() {
 async function send({ to, subject, text }) {
   if (env.isTest || !configured() || !to) return false;
   try {
-    await getTransporter().sendMail({ from: env.email.from, to, subject, text });
+    await getTransporter().sendMail({
+      from: env.email.from,
+      to,
+      subject,
+      text,
+    });
     return true;
   } catch (err) {
     console.warn(`[email] failed to send "${subject}": ${err.message}`);
@@ -47,9 +54,12 @@ const notifyNewRequest = (req, serviceName) =>
 const notifyStatusChanged = (req, serviceName) =>
   send({
     to: req.contact.email,
-    subject: req.status === 'completed' ? `Request completed: ${req.requestId}` : `Request update: ${req.requestId}`,
-    text: `Hello ${req.contact.name},\n\nYour request ${req.requestId} (${serviceName}) is now "${req.status.replace('_', ' ')}".${
-      req.adminMessage ? `\n\nMessage from the shop: ${req.adminMessage}` : ''
+    subject:
+      req.status === "completed"
+        ? `Request completed: ${req.requestId}`
+        : `Request update: ${req.requestId}`,
+    text: `Hello ${req.contact.name},\n\nYour request ${req.requestId} (${serviceName}) is now "${req.status.replace("_", " ")}".${
+      req.adminMessage ? `\n\nMessage from the shop: ${req.adminMessage}` : ""
     }\n\n- ${env.business.name}`,
   });
 
